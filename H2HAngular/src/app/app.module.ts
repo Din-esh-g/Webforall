@@ -45,6 +45,7 @@ import { LikeListResolver } from './_resolver/list_like_resolver';
 import { MessageResolver } from './_resolver/message_resolver';
 import { MessageComponent } from './Components/message/message.component';
 import { MessagethreadadComponent } from './Components/Memebers/messagethreadad/messagethreadad.component';
+import { FooterComponent } from './Components/footer/footer.component';
 
 
 
@@ -77,7 +78,8 @@ export class CustomHammerConfig extends HammerGestureConfig{
     RegisterComponent,
     TimeAgoPipe,
     MessageComponent,
-    MessagethreadadComponent
+    MessagethreadadComponent,
+    FooterComponent
    
    
   ],

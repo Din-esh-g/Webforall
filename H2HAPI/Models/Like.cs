@@ -11,6 +11,9 @@ namespace NewProjectAPI.Models
     public int LikeeId { get; set; }
     public Users Liker { get; set; }
     public Users Likee { get; set; }
+  
+   
+
 
   }
 }

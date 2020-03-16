@@ -1,1 +1,56 @@
-<p>properties works!</p>
+<br><br><br>
+<p>This is the display</p>
+<div *ngFor="let value of values">
+    {{value.title}},
+    
+    <button class="btn btn-primary" type="button" (click)="$event.stopPropagation()" (click)="deleteMessage(value.id)">Delete</button>
+</div>
+
+
+
+
+<form #propertyPostForm="ngForm" (ngSubmit)="postproperty(); propertyPostForm.reset()"
+    class="col-propertyPostForm.reset()md-6 offset-md-3">
+
+    <h2 class="text-center text-primary">List your property</h2>
+
+    <hr>
+    <div class="form-group">
+        <input type="text" class="form-control" name="title" [(ngModel)]="model.title" placeholder="Title">
+    </div>
+
+    <div class="form-group">
+        <input type="text" class="form-control" name="typeOfProperty" [(ngModel)]="model.typeOfProperty"
+            placeholder="Type of Listing">
+    </div>
+
+    <div class="form-group">
+        <input type="text" class="form-control" name="propertyDescription" [(ngModel)]="model.propertyDescription"
+            placeholder="propertyDescription">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="city" [(ngModel)]="model.city" placeholder="City">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="county" [(ngModel)]="model.county" placeholder="County">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="zipecode" [(ngModel)]="model.zipecode" placeholder="Zipe Code">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="state" [(ngModel)]="model.state" placeholder="State">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="country" [(ngModel)]="model.country" placeholder="Country">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="otherinformation" [(ngModel)]="model.otherInformation"
+            placeholder="Other Information">
+    </div>
+
+
+    <div class="form-group text-center">
+        <button class="btn btn-success mr-2" (click)="$event.stopPropagation()" type="submit">Continue</button>
+        <button class="btn btn-primary" type="button" (click)="cancel(); propertyPostForm.reset()">Cancel</button>
+    </div>
+</form>

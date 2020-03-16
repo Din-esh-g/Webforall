@@ -42,19 +42,9 @@ namespace NewProjectAPI.Migrations
                     b.Property<int>("LikeeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PropertyId1")
-                        .HasColumnType("int");
-
                     b.HasKey("LikerId", "LikeeId");
 
                     b.HasIndex("LikeeId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("PropertyId1");
 
                     b.ToTable("Likes");
                 });
@@ -205,7 +195,7 @@ namespace NewProjectAPI.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ContacDetails")
+                    b.Property<string>("ContactDetails")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
@@ -227,6 +217,7 @@ namespace NewProjectAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TypeOfProperty")
@@ -304,14 +295,6 @@ namespace NewProjectAPI.Migrations
                         .HasForeignKey("LikerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("NewProjectAPI.Models.Property", null)
-                        .WithMany("Likees")
-                        .HasForeignKey("PropertyId");
-
-                    b.HasOne("NewProjectAPI.Models.Property", null)
-                        .WithMany("Likers")
-                        .HasForeignKey("PropertyId1");
                 });
 
             modelBuilder.Entity("NewProjectAPI.Models.Message", b =>
@@ -331,7 +314,7 @@ namespace NewProjectAPI.Migrations
 
             modelBuilder.Entity("NewProjectAPI.Models.Photo", b =>
                 {
-                    b.HasOne("NewProjectAPI.Models.Property", null)
+                    b.HasOne("NewProjectAPI.Models.Property", "Property")
                         .WithMany("Photos")
                         .HasForeignKey("PropertyId");
 

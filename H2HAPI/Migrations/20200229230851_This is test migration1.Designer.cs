@@ -10,8 +10,8 @@ using NewProjectAPI.Data;
 namespace NewProjectAPI.Migrations
 {
     [DbContext(typeof(NewProjectAPIContext))]
-    [Migration("20200210224241_HandToHand Databse Creatin")]
-    partial class HandToHandDatabseCreatin
+    [Migration("20200229230851_This is test migration1")]
+    partial class Thisistestmigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,61 @@ namespace NewProjectAPI.Migrations
                     b.ToTable("Event");
                 });
 
+            modelBuilder.Entity("NewProjectAPI.Models.Like", b =>
+                {
+                    b.Property<int>("LikerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LikerId", "LikeeId");
+
+                    b.HasIndex("LikeeId");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("NewProjectAPI.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateRead")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("MessageSent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("RecipientDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SenderDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("NewProjectAPI.Models.MyJob", b =>
                 {
                     b.Property<int>("Id")
@@ -43,14 +98,28 @@ namespace NewProjectAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ContacDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("JobDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("JobTitle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PostedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TypeOfJob")
                         .HasColumnType("nvarchar(max)");
@@ -69,6 +138,9 @@ namespace NewProjectAPI.Migrations
 
                     b.Property<string>("AuthorName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateofPublication")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -94,16 +166,21 @@ namespace NewProjectAPI.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("PropertyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("URL")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PropertyId");
 
                     b.HasIndex("UserId");
 
@@ -117,20 +194,39 @@ namespace NewProjectAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ContacDetails")
+                    b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ContactDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("County")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfPosting")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OtherInformation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PropertyDescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TypeOfProperty")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ZipeCode")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -188,13 +284,45 @@ namespace NewProjectAPI.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("NewProjectAPI.Models.Like", b =>
+                {
+                    b.HasOne("NewProjectAPI.Models.Users", "Likee")
+                        .WithMany("Likers")
+                        .HasForeignKey("LikeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NewProjectAPI.Models.Users", "Liker")
+                        .WithMany("Likees")
+                        .HasForeignKey("LikerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("NewProjectAPI.Models.Message", b =>
+                {
+                    b.HasOne("NewProjectAPI.Models.Users", "Recipient")
+                        .WithMany("MessagesReceived")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("NewProjectAPI.Models.Users", "Sender")
+                        .WithMany("MessagesSent")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("NewProjectAPI.Models.Photo", b =>
                 {
+                    b.HasOne("NewProjectAPI.Models.Property", "Property")
+                        .WithMany("Photos")
+                        .HasForeignKey("PropertyId");
+
                     b.HasOne("NewProjectAPI.Models.Users", "User")
                         .WithMany("Photos")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

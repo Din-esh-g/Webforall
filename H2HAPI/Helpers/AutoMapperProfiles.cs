@@ -28,7 +28,9 @@ namespace NewProjectAPI.Helpers
       CreateMap<Message, MessageToReturnDTO>()
         .ForMember(m => m.SenderPhotoUrl, opt => opt.MapFrom(u => u.Sender.Photos.FirstOrDefault(p => p.IsMain).URL))
      .ForMember(m => m.RecipientPhotoUrl, opt => opt.MapFrom(u => u.Recipient.Photos.FirstOrDefault(p => p.IsMain).URL));
-
+      CreateMap<PropertyDTO, Property>();
+            CreateMap<Property, PropertyDetailsDTO>();
+            CreateMap<Property, PropertyDTO>();
     }
 
   }

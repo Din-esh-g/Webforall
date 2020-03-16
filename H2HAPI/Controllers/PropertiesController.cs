@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NewProjectAPI.Data;
 using NewProjectAPI.Models;
-
+using NewProjectAPI.Repo;
 
 namespace NewProjectAPI.Controllers
 {
@@ -16,16 +17,18 @@ namespace NewProjectAPI.Controllers
     public class PropertiesController : ControllerBase
     {
         private readonly NewProjectAPIContext _context;
-
-        public PropertiesController(NewProjectAPIContext context)
+        private readonly IMapper _mapper;
+      
+        public PropertiesController(NewProjectAPIContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Properties
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
-        {
+          {
             return await _context.Properties.ToListAsync();
         }
 
@@ -76,18 +79,37 @@ namespace NewProjectAPI.Controllers
         }
 
         // POST: api/Properties
-           [HttpPost("postproperty")]
-        public async Task<IActionResult> PostProperty([FromBody]Property @property)
-        {
-            _context.Properties.Add(@property);
-            await _context.SaveChangesAsync();
-      return StatusCode(201);
 
-           // return CreatedAtAction("GetProperty", new { id = @property.Id }, @property);
+        [HttpPost("postproperty")]
+        public async Task<IActionResult> PostProperty(PropertyDTO propertyDTO)
+        {
+            var propTocreate = _mapper.Map<Property>(propertyDTO);
+
+            _context.Properties.Add(propTocreate);
+            await _context.SaveChangesAsync();
+           return StatusCode(201);
+            var propToReturn = _mapper.Map<PropertyDetailsDTO>(propTocreate);
+
+           return CreatedAtRoute("GetProperty", new { controller = "Property", id = propTocreate.Id }, propToReturn);
+
+
         }
 
-    // DELETE: api/Properties/5
-    [HttpDelete("{id}")]
+
+
+
+        //     [HttpPost("postproperty")]
+        //  public async Task<IActionResult> PostProperty([FromBody]Property @property)
+        //  {
+        //      _context.Properties.Add(@property);
+        //      await _context.SaveChangesAsync();
+        //return StatusCode(201);
+
+        //     // return CreatedAtAction("GetProperty", new { id = @property.Id }, @property);
+        //  }
+
+        // DELETE: api/Properties/5
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Property>> DeleteProperty(int id)
         {
             var @property = await _context.Properties.FindAsync(id);

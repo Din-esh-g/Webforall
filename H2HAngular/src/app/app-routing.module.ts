@@ -19,12 +19,14 @@ import { RegisterComponent } from './Components/Memebers/register/register.compo
 import { LikeListResolver } from './_resolver/list_like_resolver';
 import { MessageComponent } from './Components/message/message.component';
 import { MessageResolver } from './_resolver/message_resolver';
+import { PropertiesComponent } from './Components/properties/properties.component';
 
 
 
 const routes: Routes = [
 {path:'home',component:HomeComponent},
 {path: 'register', component: RegisterComponent },
+  { path: 'property', component: PropertiesComponent },
 {path: 'myjob',component:MyjobComponent},
 {path:'mynews', component:MynewsComponent},
 { path: 'message', component: MessageComponent, resolve:{messages: MessageResolver} },
