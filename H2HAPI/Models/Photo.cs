@@ -10,8 +10,8 @@ namespace NewProjectAPI.Models
         public DateTime DateAdded { get; set; }
         public bool IsMain { get; set; }
         public string PublicId { get; set; }
-        public Users User { get; set; }
-        public Property Property {get; set;}
+        public  virtual Users User { get; set; }
+        public virtual Property Property {get; set;}
         public int? PropertyId { get; set; }
     public int? UserId { get; set; }
 

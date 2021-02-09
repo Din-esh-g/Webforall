@@ -81,7 +81,7 @@ deletePhoto(id: number){
   this.alertyfy.confirm('Are you sure you want to delete this photo ?',() =>{
     this.userService.deletePhoto(this.authService.decodedToken.nameid, id).subscribe(() =>{
       this.photos.splice(this.photos.findIndex(p => p.id ===id),1);
-      this.alertyfy.sucess('Photo has been deleted');
+      this.alertyfy.success('Photo has been deleted');
     },
     error => {
       this.alertyfy.error('Failed to delete the Photo');

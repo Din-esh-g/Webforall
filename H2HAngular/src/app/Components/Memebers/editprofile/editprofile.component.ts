@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { User } from 'src/app/_Models/user';
 import { Route } from '@angular/compiler/src/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/_Services/user.service';
 import { AlertifyService } from 'src/app/_Services/alertify.service';
 import { NgForm } from '@angular/forms';
@@ -24,6 +24,7 @@ unloadNotification($event:any){
 }
   constructor(private authService:AuthenticationService, 
     private route:ActivatedRoute, 
+    private routers: Router,
     private userService:UserService, 
     private alertify:AlertifyService) { }
 
@@ -59,6 +60,21 @@ error => {
 updateMainPhoto(photoUrl){
   this.user.photoUrl =photoUrl;
 }
+deleteUser(){
+  this.userService.deleteUser(this.authService.decodedToken.nameid).subscribe(() => {
+    this.logOut(); 
+   }, error => {
+     this.alertify.error('Problem to delete. ');
+   });
 
+}
+  logOut() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.authService.decodedToken = null;
+    this.authService.currentUser = null;
+    this.alertify.warning('logged out');
+    this.routers.navigate(['/home']);
+  }
 
 }

@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NewProjectAPI.Data;
 using NewProjectAPI.Helpers;
 using NewProjectAPI.Models;
 using NewProjectAPI.Repo;
@@ -22,10 +23,12 @@ namespace NewProjectAPI.Controllers
     {
     private readonly IDatingRepo _repo;
     private readonly IMapper _mapper;
-    public UsersController(IDatingRepo repo, IMapper mapper)
+    private readonly NewProjectAPIContext _context;
+        public UsersController(IDatingRepo repo, IMapper mapper, NewProjectAPIContext context)
     {
       _repo = repo;
       _mapper = mapper;
+      _context = context;
     }
     //This method is not implemented pagination 
     //[HttpGet]
@@ -114,5 +117,59 @@ namespace NewProjectAPI.Controllers
     }
 
 
-  }
+        // DELETE: api/Users/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Users>> DeleteUser(int id)
+        {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId == id)
+            {
+                var user = await _repo.GetUser(id);
+                if (user == null)
+                {
+                    return NotFound("No user found for this Id");
+
+                }
+               
+                var messageFromRepo = await _repo.GetMessage(id);
+                if (messageFromRepo != null)
+                {
+
+
+
+                    if (messageFromRepo.SenderId == id)
+                        messageFromRepo.SenderDeleted = true;
+                    if (messageFromRepo.RecipientId == id)
+                        messageFromRepo.RecipientDeleted = true;
+
+                    if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+                        _repo.Delete(messageFromRepo);
+                    await _repo.SaveAll();
+
+                }
+              
+                var likesFrom = await _repo.GetLike(currentUserId);
+                if(likesFrom != null)
+                {
+                    if (likesFrom.LikeeId == currentUserId || likesFrom.LikerId == currentUserId)
+                        _repo.Delete<Like>(likesFrom);
+                     await _repo.SaveAll();
+
+
+                }
+                //user.Likees = null;
+                //user.Likers = null;
+
+                _repo.Delete<Users>(user);
+
+                await _repo.SaveAll();
+                return NoContent();
+
+            }
+            return BadRequest("Problem to delete User");
+            
+
+            
+        }
+        }
 }

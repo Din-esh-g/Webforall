@@ -21,6 +21,7 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using NewProjectAPI.Helpers;
+using Microsoft.AspNetCore.Routing;
 
 namespace NewProjectAPI
 {
@@ -32,7 +33,23 @@ namespace NewProjectAPI
         }
 
         public IConfiguration Configuration { get; }
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<NewProjectAPIContext>(options => {
+                options.UseLazyLoadingProxies();
+                options.UseSqlServer(Configuration.GetConnectionString("NewProjectAPIContext"));
+            });
+            ConfigureServices(services);
+        }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<NewProjectAPIContext>(options => {
+                options.UseLazyLoadingProxies();
+                options.UseSqlServer(Configuration.GetConnectionString("NewProjectAPIContext"));
+            });
+            ConfigureServices(services);
+        }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -41,8 +58,10 @@ namespace NewProjectAPI
               Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
-            services.AddDbContext<NewProjectAPIContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("NewProjectAPIContext")));
+            services.AddDbContext<NewProjectAPIContext>(options => {
+                options.UseLazyLoadingProxies();
+                options.UseSqlServer(Configuration.GetConnectionString("NewProjectAPIContext"));
+                });
             services.AddCors();
       //For Clsoudinary
       services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
@@ -67,46 +86,51 @@ namespace NewProjectAPI
       });
         }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-      }
-      //This is for error handling in the production mode(we have the extension method in Hellper class to
-      else
-      {
-        app.UseExceptionHandler(builder =>
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-          builder.Run(async context =>
-          {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            var error = context.Features.Get<IExceptionHandlerFeature>();
-            if (error != null)
+            if (env.IsDevelopment())
             {
-              context.Response.AddApplicationError(error.Error.Message);
-              await context.Response.WriteAsync(error.Error.Message);
+                app.UseDeveloperExceptionPage();
             }
-          });
-        });
-    }
+            //This is for error handling in the production mode(we have the extension method in Hellper class to
+            else
+            {
+                app.UseExceptionHandler(builder =>
+                {
+                    builder.Run(async context =>
+            {
+                      context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                      var error = context.Features.Get<IExceptionHandlerFeature>();
+                      if (error != null)
+                      {
+                          context.Response.AddApplicationError(error.Error.Message);
+                          await context.Response.WriteAsync(error.Error.Message);
+                      }
+                  });
+                });
+            }
 
 
 
-       app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-      app.UseAuthentication();
-           // app.UseMvc();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseAuthentication();
+            // app.UseMvc();
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+          
+        
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+               endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
+         
         }
     }
 }

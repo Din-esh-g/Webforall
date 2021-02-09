@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-mynews',
+
   templateUrl: './mynews.component.html',
   styleUrls: ['./mynews.component.scss']
 })

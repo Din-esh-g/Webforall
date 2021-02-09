@@ -21,7 +21,7 @@ namespace NewProjectAPI.Models
         public string State { get; set; }
         public string Country { get; set; }
         public string OtherInformation { get; set; }
-        public ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; }
       
        
 

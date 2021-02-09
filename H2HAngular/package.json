@@ -31,8 +31,10 @@
     "font-awesome-icons": "^1.6.0",
     "jsonwebtoken": "^8.5.1",
     "ng2-file-upload": "^1.4.0",
+    "ng4-validators": "^6.0.1",
     "ngx-bootstrap": "^5.3.2",
     "ngx-bootstrap-navbar": "0.0.5",
+    "ngx-custom-validators": "^9.1.0",
     "ngx-dropdown": "0.0.22",
     "ngx-gallery": "^5.10.0",
     "popper.js": "^1.16.1",
@@ -61,6 +63,6 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.7.4"
   }
 }

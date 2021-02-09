@@ -31,7 +31,12 @@ namespace NewProjectAPI.Repo
       return await _context.Likes.FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recipientId);
     }
 
-    public async Task<Photo> GetMainPhotoForUser(int userId)
+        public async Task<Like> GetLike(int id)
+        {
+            return await _context.Likes.FirstOrDefaultAsync(u => u.LikerId == id || u.LikeeId == id);
+        }
+
+        public async Task<Photo> GetMainPhotoForUser(int userId)
     {
       return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(p => p.IsMain);
     }
@@ -44,8 +49,7 @@ namespace NewProjectAPI.Repo
     public async Task<PagedList<Message>> GetMessageForUser(MessageParams messageParams)
     {
       //We want to show the sender reciver and photo
-      var messages = _context.Messages.Include(u => u.Sender).ThenInclude(p => p.Photos)
-        .Include(u => u.Recipient).ThenInclude(p => p.Photos).AsQueryable();
+      var messages = _context.Messages.AsQueryable();
 
       switch(messageParams.MessageContainer)
       {
@@ -71,9 +75,7 @@ namespace NewProjectAPI.Repo
     {
 
       //We want to show the sender reciver and photo
-      var messages = await _context.Messages.Include(u => u.Sender).ThenInclude(p => p.Photos)
-        .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-        .Where(m => m.RecipientId == userId && m.RecipientDeleted == false
+      var messages = await _context.Messages.Include(u => u.Sender).Where(m => m.RecipientId == userId && m.RecipientDeleted == false
         && m.SenderId == recipientId
         || m.RecipientId == recipientId && m.SenderDeleted ==false
         && m.SenderId == userId)
@@ -92,21 +94,20 @@ namespace NewProjectAPI.Repo
 
     public async Task<Users> GetUser(int id)
     {
-      var user =await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+      var user =await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
       return user;
     }
 
     //public async Task<IEnumerable<Users>> GetUsers()
     //{
-    //  var users = await _context.Users.Include(p => p.Photos).ToListAsync();
+    //  var users = await _context.Users.ToListAsync();
     //  return users;
     //}
     //This method for the paginations
     public async Task<PagedList<Users>> GetUsers(UserParams userParams)
     {
 
-      var users = _context.Users.Include(p => p.Photos)
-        .OrderByDescending(u => u.LastActive).AsQueryable();//We added asquerable for filter
+      var users = _context.Users.OrderByDescending(u => u.LastActive).AsQueryable();//We added asquerable for filter
 
       //Filter for Gender
       users = users.Where(u => u.Id != userParams.UserId);
@@ -159,10 +160,7 @@ namespace NewProjectAPI.Repo
 
     private async Task<IEnumerable<int>>GetUserLike(int id, bool likers)
     {
-      var user = await _context.Users
-        .Include(x => x.Likers)
-        .Include(x => x.Likees)
-        .FirstOrDefaultAsync(u => u.Id == id);
+      var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
       if (likers)
       {
         return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId);

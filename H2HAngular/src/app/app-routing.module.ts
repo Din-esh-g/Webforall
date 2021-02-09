@@ -20,6 +20,7 @@ import { LikeListResolver } from './_resolver/list_like_resolver';
 import { MessageComponent } from './Components/message/message.component';
 import { MessageResolver } from './_resolver/message_resolver';
 import { PropertiesComponent } from './Components/properties/properties.component';
+import { TestFormBuilderComponent } from './Components/test-form-builder/test-form-builder.component';
 
 
 
@@ -28,6 +29,8 @@ const routes: Routes = [
 {path: 'register', component: RegisterComponent },
   { path: 'property', component: PropertiesComponent },
 {path: 'myjob',component:MyjobComponent},
+
+  { path: 'test', component: TestFormBuilderComponent },
 {path:'mynews', component:MynewsComponent},
 { path: 'message', component: MessageComponent, resolve:{messages: MessageResolver} },
 { path: 'makeafriend', component: MakeafriendComponent, resolve: { users: LikeListResolver }},

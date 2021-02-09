@@ -10,37 +10,31 @@ using NewProjectAPI.Data;
 using NewProjectAPI.Models;
 using NewProjectAPI.Repo;
 
-namespace NewProjectAPI.Controllers
-{
-    [Route("api/[controller]")]
+namespace NewProjectAPI.Controllers {
+    [Route ("api/[controller]")]
     [ApiController]
-    public class PropertiesController : ControllerBase
-    {
+    public class PropertiesController : ControllerBase {
         private readonly NewProjectAPIContext _context;
         private readonly IMapper _mapper;
-      
-        public PropertiesController(NewProjectAPIContext context, IMapper mapper)
-        {
+
+        public PropertiesController (NewProjectAPIContext context, IMapper mapper) {
             _context = context;
             _mapper = mapper;
         }
 
         // GET: api/Properties
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
-          {
-            return await _context.Properties.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Property>>> GetProperties () {
+            return await _context.Properties.ToListAsync ();
         }
 
         // GET: api/Properties/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Property>> GetProperty(int id)
-        {
-            var @property = await _context.Properties.FindAsync(id);
+        [HttpGet ("{id}")]
+        public async Task<ActionResult<Property>> GetProperty (int id) {
+            var @property = await _context.Properties.FindAsync (id);
 
-            if (@property == null)
-            {
-                return NotFound();
+            if (@property == null) {
+                return NotFound ();
             }
 
             return @property;
@@ -49,54 +43,40 @@ namespace NewProjectAPI.Controllers
         // PUT: api/Properties/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProperty(int id, Property @property)
-        {
-            if (id != @property.Id)
-            {
-                return BadRequest();
+        [HttpPut ("{id}")]
+        public async Task<IActionResult> PutProperty (int id, Property @property) {
+            if (id != @property.Id) {
+                return BadRequest ();
             }
 
-            _context.Entry(@property).State = EntityState.Modified;
+            _context.Entry (@property).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PropertyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
+            try {
+                await _context.SaveChangesAsync ();
+            } catch (DbUpdateConcurrencyException) {
+                if (!PropertyExists (id)) {
+                    return NotFound ();
+                } else {
                     throw;
                 }
             }
 
-            return NoContent();
+            return NoContent ();
         }
 
         // POST: api/Properties
 
-        [HttpPost("postproperty")]
-        public async Task<IActionResult> PostProperty(PropertyDTO propertyDTO)
-        {
-            var propTocreate = _mapper.Map<Property>(propertyDTO);
+        [HttpPost ("postproperty")]
+        public async Task<IActionResult> PostProperty (PropertyDTO propertyDTO) {
+            var propTocreate = _mapper.Map<Property> (propertyDTO);
 
-            _context.Properties.Add(propTocreate);
-            await _context.SaveChangesAsync();
-           return StatusCode(201);
-            var propToReturn = _mapper.Map<PropertyDetailsDTO>(propTocreate);
-
-           return CreatedAtRoute("GetProperty", new { controller = "Property", id = propTocreate.Id }, propToReturn);
-
+            _context.Properties.Add (propTocreate);
+            await _context.SaveChangesAsync ();
+            //return StatusCode (201);
+            var propToReturn = _mapper.Map<PropertyDetailsDTO> (propTocreate);
+            return CreatedAtRoute ("GetProperty", new { controller = "Property", id = propTocreate.Id }, propToReturn);
 
         }
-
-
-
 
         //     [HttpPost("postproperty")]
         //  public async Task<IActionResult> PostProperty([FromBody]Property @property)
@@ -109,24 +89,21 @@ namespace NewProjectAPI.Controllers
         //  }
 
         // DELETE: api/Properties/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Property>> DeleteProperty(int id)
-        {
-            var @property = await _context.Properties.FindAsync(id);
-            if (@property == null)
-            {
-                return NotFound();
+        [HttpDelete ("{id}")]
+        public async Task<ActionResult<Property>> DeleteProperty (int id) {
+            var @property = await _context.Properties.FindAsync (id);
+            if (@property == null) {
+                return NotFound ();
             }
 
-            _context.Properties.Remove(@property);
-            await _context.SaveChangesAsync();
+            _context.Properties.Remove (@property);
+            await _context.SaveChangesAsync ();
 
             return @property;
         }
 
-        private bool PropertyExists(int id)
-        {
-            return _context.Properties.Any(e => e.Id == id);
+        private bool PropertyExists (int id) {
+            return _context.Properties.Any (e => e.Id == id);
         }
     }
 }

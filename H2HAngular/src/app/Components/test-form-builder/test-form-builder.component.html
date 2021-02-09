@@ -1,0 +1,23 @@
+<form [formGroup]="productRegisterForm">
+
+<div>
+    <label> First Name:</label>
+</div>
+<div>
+    <input type="text" formControlName="firstName">
+</div>
+<div>
+    <label> Date of purchase:</label>
+</div>
+<div>
+    <input type="date" formControlName=" dateofSale">
+</div>
+<div>
+    <label> Price:</label>
+</div>
+<div>
+    <input type="number" formControlName=" price">
+</div>
+<button type="submit" [disabled] ="!productRegisterForm.valid">Submit</button>
+
+</form>

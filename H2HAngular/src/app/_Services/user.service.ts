@@ -131,6 +131,10 @@ deleteMessage(id:number, userId:number){
   return this.http.delete(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
 }
 
+deleteUser(id: number){
+  return this.http.delete(this.baseUrl + 'users/' + id);
+}
+
   
 
 }

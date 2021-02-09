@@ -73,6 +73,10 @@
                         
                         <app-photoeditor [photos]="user.photos" (getMemberPhotoChange)= "updateMainPhoto($event)"></app-photoeditor>
                     </tab>
+                    <tab heading="Delete Account">
+                        <button (click)="deleteUser()">Confirm Delete</button>
+                        
+                    </tab>
 
 
                 </tabset>

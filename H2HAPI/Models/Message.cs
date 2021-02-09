@@ -9,9 +9,9 @@ namespace NewProjectAPI.Models
   {
     public int Id { get; set; }
     public int SenderId { get; set; }
-    public Users Sender { get; set; }
+    public virtual Users Sender { get; set; }
     public int RecipientId {get; set;}
-    public Users Recipient { get; set; }
+    public virtual Users Recipient { get; set; }
     public string Content { get; set; }
     public bool IsRead { get; set; }
 

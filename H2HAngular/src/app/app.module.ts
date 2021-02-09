@@ -46,6 +46,7 @@ import { MessageResolver } from './_resolver/message_resolver';
 import { MessageComponent } from './Components/message/message.component';
 import { MessagethreadadComponent } from './Components/Memebers/messagethreadad/messagethreadad.component';
 import { FooterComponent } from './Components/footer/footer.component';
+import { TestFormBuilderComponent } from './Components/test-form-builder/test-form-builder.component';
 
 
 
@@ -79,7 +80,8 @@ export class CustomHammerConfig extends HammerGestureConfig{
     TimeAgoPipe,
     MessageComponent,
     MessagethreadadComponent,
-    FooterComponent
+    FooterComponent,
+    TestFormBuilderComponent
    
    
   ],
@@ -100,6 +102,7 @@ export class CustomHammerConfig extends HammerGestureConfig{
     BrowserAnimationsModule,
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
+
    // NgxNavbarModule,
     JwtModule.forRoot({
       config: {

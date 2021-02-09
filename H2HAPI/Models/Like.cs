@@ -9,8 +9,8 @@ namespace NewProjectAPI.Models
   {
     public int LikerId { get; set; }
     public int LikeeId { get; set; }
-    public Users Liker { get; set; }
-    public Users Likee { get; set; }
+    public virtual Users Liker { get; set; }
+    public virtual Users Likee { get; set; }
   
    
 
